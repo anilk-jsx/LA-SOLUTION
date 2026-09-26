@@ -223,19 +223,7 @@ ul {
   display: flex;
   align-items: center;
   gap: 12px;
-}
-
-.logo-symbol {
-  width: 44px;
-  height: 44px;
-  background: linear-gradient(135deg, var(--blue-accent) 0%, var(--blue-hover) 100%);
-  color: #ffffff;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.4rem;
-  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+  text-decoration: none;
 }
 
 .logo-text-group {
@@ -245,18 +233,18 @@ ul {
 
 .logo-main {
   font-family: var(--font-heading);
-  font-size: 1.35rem;
+  font-size: 1.45rem;
   font-weight: 800;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
   color: var(--blue-hover);
   line-height: 1.1;
 }
 
 .logo-sub {
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 2px;
-  color: var(--text-muted);
+  letter-spacing: 2.5px;
+  color: var(--blue-primary);
 }
 
 .nav-menu {
@@ -271,10 +259,12 @@ ul {
   color: var(--text-muted);
   position: relative;
   padding: 6px 0;
+  transition: var(--transition);
 }
 
 .nav-link:hover, .nav-link.active {
   color: var(--blue-primary);
+  font-weight: 700;
 }
 
 .nav-link::after {
@@ -283,7 +273,7 @@ ul {
   bottom: 0;
   left: 0;
   width: 0%;
-  height: 2px;
+  height: 2.5px;
   background: var(--blue-primary);
   border-radius: 2px;
   transition: width 0.25s ease;
@@ -291,6 +281,11 @@ ul {
 
 .nav-link:hover::after, .nav-link.active::after {
   width: 100%;
+}
+
+.nav-btn-cta.active {
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.35), 0 6px 20px rgba(2, 132, 199, 0.4);
+  transform: translateY(-2px);
 }
 
 .nav-btn-cta {
@@ -776,6 +771,9 @@ ul {
   flex-direction: column;
   position: relative;
   overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
   transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
 }
 
@@ -783,6 +781,36 @@ ul {
   transform: translateY(-6px);
   box-shadow: var(--shadow-hover);
   border-color: var(--blue-primary);
+}
+
+.domain-link-icon {
+  font-size: 0.72rem;
+  margin-left: 4px;
+  opacity: 0.65;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  display: inline-block;
+}
+
+.vertical-card:hover .domain-link-icon {
+  opacity: 1;
+  transform: translate(2px, -2px);
+  color: var(--blue-hover);
+}
+
+.footer-ext {
+  font-size: 0.68rem;
+  margin-left: 4px;
+  opacity: 0.6;
+}
+
+@keyframes fieldGlow {
+  0% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.7); border-color: var(--blue-primary); }
+  50% { box-shadow: 0 0 0 8px rgba(2, 132, 199, 0.28); border-color: var(--blue-primary); }
+  100% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0); border-color: var(--blue-border); }
+}
+
+.dropdown-pulse {
+  animation: fieldGlow 1.4s ease-out;
 }
 
 /* Accent Bars on top of cards */

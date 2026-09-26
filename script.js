@@ -1,15 +1,65 @@
 /**
  * LA SOLUTION PARTNERSHIP - INTERACTIVE SCRIPT
- * Handles navigation, interactive umbrella rib clicks, vertical filtering,
- * form validation, direct WhatsApp message generation, and modal feedback.
+ * Handles:
+ * 1. Navbar active state updates on click & on scroll (ScrollSpy)
+ * 2. Mobile menu toggle
+ * 3. Interactive umbrella rib clicks -> Scroll to vertical card with highlight pulse
+ * 4. Filter chips for 8 verticals -> Filter & scroll down to verticals section
+ * 5. Card button actions -> Smooth scroll to connect form & pre-select vertical in dropdown
+ * 6. Form validation, localStorage persistence, and success confirmation modal
+ * 7. Instant WhatsApp message dispatch with pre-filled details
  */
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // --- 1. Mobile Menu Toggle ---
-  const mobileToggle = document.getElementById('mobileToggle');
+  // --- 1. Navbar Active State & ScrollSpy ---
   const navMenu = document.getElementById('navMenu');
+  const mobileToggle = document.getElementById('mobileToggle');
+  const navLinks = document.querySelectorAll('.nav-menu .nav-link');
 
+  const navSectionMap = [
+    { id: 'hero', link: document.querySelector('.nav-menu a[href="#hero"]') },
+    { id: 'ecosystem', link: document.querySelector('.nav-menu a[href="#ecosystem"]') },
+    { id: 'verticals', link: document.querySelector('.nav-menu a[href="#verticals"]') },
+    { id: 'foundation', link: document.querySelector('.nav-menu a[href="#foundation"]') },
+    { id: 'impact', link: document.querySelector('.nav-menu a[href="#impact"]') },
+    { id: 'connect', link: document.querySelector('.nav-menu a[href="#connect"]') }
+  ];
+
+  // Explicit click on any navbar link
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+    });
+  });
+
+  // Dynamic ScrollSpy
+  function updateActiveNavOnScroll() {
+    const scrollPosition = window.scrollY + 140; // Header offset
+    let activeLink = null;
+
+    for (let i = navSectionMap.length - 1; i >= 0; i--) {
+      const targetEl = document.getElementById(navSectionMap[i].id);
+      if (targetEl) {
+        const top = targetEl.offsetTop;
+        if (scrollPosition >= top) {
+          activeLink = navSectionMap[i].link;
+          break;
+        }
+      }
+    }
+
+    if (activeLink) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      activeLink.classList.add('active');
+    }
+  }
+
+  window.addEventListener('scroll', updateActiveNavOnScroll, { passive: true });
+  updateActiveNavOnScroll();
+
+  // Mobile menu toggle
   if (mobileToggle && navMenu) {
     mobileToggle.addEventListener('click', () => {
       navMenu.classList.toggle('show');
@@ -35,10 +85,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- 2. Interactive Umbrella Ribs Click -> Scroll to Vertical Card ---
   const ribs = document.querySelectorAll('.umbrella-canopy .rib');
+  const filterChips = document.querySelectorAll('.legend-chips .chip');
+  const verticalCards = document.querySelectorAll('.vertical-card');
+  const verticalsSection = document.getElementById('verticals');
+
   ribs.forEach(rib => {
     rib.addEventListener('click', () => {
       const targetId = rib.getAttribute('data-target');
       if (targetId) {
+        // Ensure card is visible even if previously filtered
+        filterChips.forEach(c => c.classList.remove('active'));
+        const allChip = document.querySelector('.legend-chips .chip[data-filter="all"]');
+        if (allChip) allChip.classList.add('active');
+        verticalCards.forEach(card => card.style.display = 'flex');
+
         const targetElement = document.getElementById(targetId);
         if (targetElement) {
           targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -51,10 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // --- 3. Filter Chips for 8 Verticals ---
-  const filterChips = document.querySelectorAll('.legend-chips .chip');
-  const verticalCards = document.querySelectorAll('.vertical-card');
-
+  // --- 3. Filter Chips for 8 Verticals with Smooth Scroll ---
   filterChips.forEach(chip => {
     chip.addEventListener('click', () => {
       filterChips.forEach(c => c.classList.remove('active'));
@@ -71,6 +128,11 @@ document.addEventListener('DOMContentLoaded', () => {
           card.style.display = 'none';
         }
       });
+
+      // Smoothly scroll down to the verticals section
+      if (verticalsSection) {
+        verticalsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
   });
 
@@ -228,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Highlight effect CSS keyframe in JS if needed
+  // Highlight keyframes
   const styleSheet = document.createElement('style');
   styleSheet.textContent = `
     @keyframes pulseCard {
@@ -251,6 +313,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /**
  * Global helper to pre-fill the form with a clicked vertical
+ * Scrolls directly down to connect form panel, pre-selects the vertical in the dropdown,
+ * flashes a visual highlight, and focuses on the input.
  */
 function preselectVertical(verticalName) {
   const formSection = document.getElementById('connect');
@@ -259,9 +323,12 @@ function preselectVertical(verticalName) {
   if (verticalDropdown) {
     let found = false;
     for (let i = 0; i < verticalDropdown.options.length; i++) {
-      if (verticalDropdown.options[i].text.includes(verticalName) || 
-          verticalDropdown.options[i].value.includes(verticalName) ||
-          verticalName.includes(verticalDropdown.options[i].value)) {
+      const optVal = verticalDropdown.options[i].value;
+      const optText = verticalDropdown.options[i].text;
+      if (optVal === verticalName || 
+          optText.includes(verticalName) || 
+          optVal.includes(verticalName) ||
+          verticalName.includes(optVal)) {
         verticalDropdown.selectedIndex = i;
         found = true;
         break;
@@ -270,6 +337,12 @@ function preselectVertical(verticalName) {
     if (!found) {
       verticalDropdown.value = verticalName;
     }
+
+    // Visual glow animation on the dropdown
+    verticalDropdown.classList.add('dropdown-pulse');
+    setTimeout(() => {
+      verticalDropdown.classList.remove('dropdown-pulse');
+    }, 1500);
   }
 
   if (formSection) {
@@ -277,7 +350,7 @@ function preselectVertical(verticalName) {
     setTimeout(() => {
       const nameInput = document.getElementById('fullName');
       if (nameInput) nameInput.focus();
-    }, 600);
+    }, 500);
   }
 }
 window.preselectVertical = preselectVertical;
