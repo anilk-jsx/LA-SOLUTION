@@ -681,30 +681,7 @@ ul {
 .legend-caption {
   font-size: 0.8rem;
   color: var(--text-light);
-  margin-bottom: 10px;
-}
-
-.legend-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-}
-
-.chip {
-  background: var(--bg-surface-soft);
-  color: var(--text-muted);
-  border: 1px solid var(--blue-border);
-  padding: 5px 12px;
-  border-radius: var(--radius-full);
-  font-size: 0.78rem;
-  font-weight: 600;
-}
-
-.chip:hover, .chip.active {
-  background: var(--blue-primary);
-  color: #ffffff;
-  border-color: var(--blue-primary);
+  margin-bottom: 0;
 }
 
 /* ==========================================================================
@@ -2165,12 +2142,6 @@ textarea:focus {
 
           <div class="umbrella-legend">
             <p class="legend-caption">Click any numbered sector to inspect its features & revenue model</p>
-            <div class="legend-chips">
-              <button class="chip" data-filter="all">All (8)</button>
-              <button class="chip" data-filter="platform">Civic & Media</button>
-              <button class="chip" data-filter="saas">SaaS & B2B</button>
-              <button class="chip" data-filter="hyperlocal">Hyperlocal & Services</button>
-            </div>
           </div>
         </div>
       </div>
@@ -2965,10 +2936,9 @@ textarea:focus {
  * 1. Navbar active state updates on click & on scroll (ScrollSpy)
  * 2. Mobile menu toggle
  * 3. Interactive umbrella rib clicks -> Scroll to vertical card with highlight pulse
- * 4. Filter chips for 8 verticals -> Filter & scroll down to verticals section
- * 5. Card button actions -> Smooth scroll to connect form & pre-select vertical in dropdown
- * 6. Form validation, localStorage persistence, and success confirmation modal
- * 7. Instant WhatsApp message dispatch with pre-filled details
+ * 4. Card button actions -> Smooth scroll to connect form & pre-select vertical in dropdown
+ * 5. Form validation, localStorage persistence, and success confirmation modal
+ * 6. Instant WhatsApp message dispatch with pre-filled details
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -3046,20 +3016,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- 2. Interactive Umbrella Ribs Click -> Scroll to Vertical Card ---
   const ribs = document.querySelectorAll('.umbrella-canopy .rib');
-  const filterChips = document.querySelectorAll('.legend-chips .chip');
-  const verticalCards = document.querySelectorAll('.vertical-card');
-  const verticalsSection = document.getElementById('verticals');
 
   ribs.forEach(rib => {
     rib.addEventListener('click', () => {
       const targetId = rib.getAttribute('data-target');
       if (targetId) {
-        // Ensure card is visible even if previously filtered
-        filterChips.forEach(c => c.classList.remove('active'));
-        const allChip = document.querySelector('.legend-chips .chip[data-filter="all"]');
-        if (allChip) allChip.classList.add('active');
-        verticalCards.forEach(card => card.style.display = 'flex');
-
         const targetElement = document.getElementById(targetId);
         if (targetElement) {
           targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -3072,32 +3033,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // --- 3. Filter Chips for 8 Verticals with Smooth Scroll ---
-  filterChips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      filterChips.forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-
-      const filter = chip.getAttribute('data-filter');
-
-      verticalCards.forEach(card => {
-        const category = card.getAttribute('data-category');
-        if (filter === 'all' || category === filter) {
-          card.style.display = 'flex';
-          card.style.animation = 'fadeIn 0.4s ease';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-
-      // Smoothly scroll down to the verticals section
-      if (verticalsSection) {
-        verticalsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    });
-  });
-
-  // --- 4. Form Validation & Handling ---
+  // --- 3. Form Validation & Handling ---
   const form = document.getElementById('partnershipForm');
   const submitViaWhatsAppBtn = document.getElementById('submitViaWhatsApp');
   const successModal = document.getElementById('successModal');
