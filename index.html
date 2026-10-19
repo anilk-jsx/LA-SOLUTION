@@ -1594,6 +1594,707 @@ textarea:focus {
 }
 
 /* ==========================================================================
+   Product Partners Section
+   ========================================================================== */
+.partners-section {
+  padding: 80px 0;
+  background: var(--bg-main);
+}
+
+/* Tab Navigation */
+.partner-tabs-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+}
+
+.partner-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 22px;
+  border-radius: var(--radius-full);
+  font-size: 0.93rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: #ffffff;
+  border: 1.5px solid var(--blue-border);
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+
+.partner-tab-btn:hover {
+  color: var(--blue-primary);
+  border-color: var(--blue-primary);
+  background: var(--blue-ultralight);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.partner-tab-btn.active {
+  background: linear-gradient(135deg, var(--blue-primary) 0%, var(--blue-hover) 100%);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.35);
+  transform: translateY(-2px);
+}
+
+.partner-tab-btn .tab-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  background: rgba(255,255,255,0.2);
+  flex-shrink: 0;
+}
+
+.partner-tab-btn:not(.active) .tab-icon {
+  background: var(--blue-light);
+  color: var(--blue-primary);
+}
+
+/* Tab Content Panels */
+.partner-tab-content {
+  display: none;
+  animation: partnerTabFade 0.35s ease;
+}
+
+.partner-tab-content.active {
+  display: block;
+}
+
+@keyframes partnerTabFade {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Partner Hero Card (Top Section of each tab) */
+.partner-hero-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--blue-border);
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 32px;
+}
+
+.partner-hero-left {
+  padding: 44px 44px 40px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+}
+
+.partner-hero-right {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 36px 24px;
+  min-height: 480px;
+  overflow: hidden;
+}
+
+.partner-hero-right::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.08;
+  background-image: radial-gradient(circle at 30% 50%, currentColor 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Partner Accent Colours */
+.partner-fg .partner-hero-right  { background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 60%, #a78bfa 100%); color: #7c3aed; }
+.partner-sw .partner-hero-right  { background: linear-gradient(135deg, #0c4a6e 0%, #0284c7 60%, #38bdf8 100%); color: #0284c7; }
+.partner-sa .partner-hero-right  { background: linear-gradient(135deg, #78350f 0%, #d97706 60%, #fbbf24 100%); color: #d97706; }
+.partner-pr .partner-hero-right  { background: linear-gradient(135deg, #064e3b 0%, #059669 60%, #34d399 100%); color: #059669; }
+
+.partner-badge-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.partner-logo-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.partner-fg .partner-logo-icon  { background: linear-gradient(135deg, #7c3aed, #4c1d95); }
+.partner-sw .partner-logo-icon  { background: linear-gradient(135deg, #0284c7, #0c4a6e); }
+.partner-sa .partner-logo-icon  { background: linear-gradient(135deg, #d97706, #78350f); }
+.partner-pr .partner-logo-icon  { background: linear-gradient(135deg, #059669, #064e3b); }
+
+.partner-name-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.partner-name {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.1;
+}
+
+.partner-tagline-pill {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 3px 12px;
+  border-radius: var(--radius-full);
+  color: #ffffff;
+  margin-top: 5px;
+  width: fit-content;
+}
+
+.partner-fg .partner-tagline-pill { background: #7c3aed; }
+.partner-sw .partner-tagline-pill { background: #0284c7; }
+.partner-sa .partner-tagline-pill { background: #d97706; }
+.partner-pr .partner-tagline-pill { background: #059669; }
+
+.partner-desc {
+  font-size: 1rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+.partner-hero-stats {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.p-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.p-stat-val {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.partner-fg .p-stat-val { color: #7c3aed; }
+.partner-sw .p-stat-val { color: #0284c7; }
+.partner-sa .p-stat-val { color: #d97706; }
+.partner-pr .p-stat-val { color: #059669; }
+
+.p-stat-lbl {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+
+.partner-hero-cta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.btn-partner-primary {
+  padding: 11px 22px;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+  transition: var(--transition);
+}
+
+.partner-fg .btn-partner-primary { background: linear-gradient(135deg, #7c3aed, #6d28d9); }
+.partner-sw .btn-partner-primary { background: linear-gradient(135deg, #0284c7, #0369a1); }
+.partner-sa .btn-partner-primary { background: linear-gradient(135deg, #d97706, #b45309); }
+.partner-pr .btn-partner-primary { background: linear-gradient(135deg, #059669, #047857); }
+
+.btn-partner-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.25);
+}
+
+.btn-partner-secondary {
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-main);
+  background: #ffffff;
+  border: 1.5px solid var(--blue-border);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+}
+
+.btn-partner-secondary:hover {
+  background: var(--blue-ultralight);
+  border-color: var(--blue-primary);
+  color: var(--blue-primary);
+  transform: translateY(-2px);
+}
+
+/* ==================== PARTNER DEVICE SHOWCASE & SLIDESHOW ==================== */
+.partner-device-showcase {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 480px;
+}
+
+/* Phone Mockup Frame */
+.phone-frame {
+  position: relative;
+  width: 220px;
+  height: 440px;
+  background: #090d16;
+  border-radius: 36px;
+  padding: 8px;
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.15),
+    0 0 35px -8px var(--partner-glow, rgba(14, 165, 233, 0.4));
+  border: 4px solid #1e293b;
+  flex-shrink: 0;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.partner-fg { --partner-glow: rgba(124, 58, 237, 0.45); }
+.partner-sw { --partner-glow: rgba(2, 132, 199, 0.45); }
+.partner-sa { --partner-glow: rgba(217, 119, 6, 0.45); }
+.partner-pr { --partner-glow: rgba(5, 150, 105, 0.45); }
+
+.phone-frame:hover {
+  transform: translateY(-4px) scale(1.015);
+  box-shadow: 
+    0 30px 60px -12px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.3),
+    0 0 45px -5px var(--partner-glow, rgba(14, 165, 233, 0.55));
+}
+
+/* Dynamic island / speaker notch */
+.phone-speaker-island {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 68px;
+  height: 15px;
+  background: #05070c;
+  border-radius: 20px;
+  z-index: 10;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+  pointer-events: none;
+}
+
+.phone-speaker-island::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 7px;
+  height: 7px;
+  background: #1e293b;
+  border-radius: 50%;
+  box-shadow: inset 0 0 2px rgba(0,255,255,0.4);
+}
+
+/* Screen container */
+.phone-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 28px;
+  overflow: hidden;
+  background: #090d16;
+  user-select: none;
+}
+
+/* Slide track */
+.slide-track {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  transition: transform 0.55s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
+}
+
+.slide-item {
+  position: relative;
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #090d16;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #090d16;
+  display: block;
+}
+
+/* Slide Caption pill at bottom of screen */
+.slide-caption {
+  position: absolute;
+  bottom: 34px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  white-space: nowrap;
+  max-width: 90%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Nav arrows on screen edges */
+.slide-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 6;
+  font-size: 0.75rem;
+  transition: background 0.2s, transform 0.2s, opacity 0.2s;
+  padding: 0;
+  opacity: 0.8;
+}
+
+.slide-nav-btn:hover {
+  opacity: 1;
+  background: rgba(15, 23, 42, 0.95);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.slide-nav-btn.prev { left: 6px; }
+.slide-nav-btn.next { right: 6px; }
+
+/* Slide Dots indicators */
+.slide-dots {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 5px;
+  z-index: 6;
+  padding: 4px 8px;
+  background: rgba(15, 23, 42, 0.65);
+  border-radius: 12px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.slide-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.slide-dot.active {
+  width: 16px;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 0 6px rgba(255,255,255,0.7);
+}
+
+/* Floating feature badges flanking the phone */
+.floating-pills-left,
+.floating-pills-right {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.float-pill {
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+  white-space: nowrap;
+  animation: floatPillAnim 3.5s ease-in-out infinite alternate;
+}
+
+.floating-pills-left .float-pill:nth-child(2) {
+  animation-delay: 1.2s;
+}
+.floating-pills-right .float-pill:nth-child(1) {
+  animation-delay: 0.6s;
+}
+.floating-pills-right .float-pill:nth-child(2) {
+  animation-delay: 1.8s;
+}
+
+@keyframes floatPillAnim {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-7px); }
+}
+
+@media (max-width: 900px) {
+  .partner-device-showcase {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .floating-pills-left,
+  .floating-pills-right {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .phone-frame {
+    width: 210px;
+    height: 420px;
+    border-radius: 32px;
+    padding: 8px;
+  }
+  .phone-screen {
+    border-radius: 24px;
+  }
+  .slide-caption {
+    font-size: 0.66rem;
+    bottom: 30px;
+    padding: 4px 10px;
+  }
+}
+
+/* Detail Cards Row */
+.partner-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.partner-detail-card {
+  background: #ffffff;
+  border: 1px solid var(--blue-border);
+  border-radius: var(--radius-md);
+  padding: 26px 22px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.partner-detail-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--blue-primary);
+}
+
+.pdc-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  margin-bottom: 14px;
+}
+
+.partner-fg .pdc-icon { background: #f5f3ff; color: #7c3aed; }
+.partner-sw .pdc-icon { background: #eff9ff; color: #0284c7; }
+.partner-sa .pdc-icon { background: #fffbeb; color: #d97706; }
+.partner-pr .pdc-icon { background: #ecfdf5; color: #059669; }
+
+.pdc-title {
+  font-family: var(--font-heading);
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 8px;
+}
+
+.pdc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pdc-list li {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  line-height: 1.35;
+}
+
+.pdc-list li i {
+  font-size: 0.8rem;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.partner-fg .pdc-list li i { color: #7c3aed; }
+.partner-sw .pdc-list li i { color: #0284c7; }
+.partner-sa .pdc-list li i { color: #d97706; }
+.partner-pr .pdc-list li i { color: #059669; }
+
+/* Revenue strip at bottom of detail grid */
+.partner-revenue-strip {
+  grid-column: 1 / -1;
+  background: var(--bg-surface-soft);
+  border: 1px solid var(--blue-border);
+  border-radius: var(--radius-md);
+  padding: 22px 28px;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.prs-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  color: #ffffff;
+  white-space: nowrap;
+  align-self: flex-start;
+  margin-top: 2px;
+}
+
+.partner-fg .prs-label { background: #7c3aed; }
+.partner-sw .prs-label { background: #0284c7; }
+.partner-sa .prs-label { background: #d97706; }
+.partner-pr .prs-label { background: #059669; }
+
+.prs-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.prs-pill {
+  background: #ffffff;
+  border: 1px solid var(--blue-border);
+  color: var(--text-main);
+  padding: 5px 13px;
+  border-radius: var(--radius-full);
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+/* Responsive for partners */
+@media (max-width: 1100px) {
+  .partner-detail-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .partner-revenue-strip {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 860px) {
+  .partner-hero-card {
+    grid-template-columns: 1fr;
+  }
+  .partner-hero-right {
+    min-height: auto;
+    padding: 32px 16px;
+  }
+  .partner-hero-left {
+    padding: 28px 24px;
+  }
+}
+
+@media (max-width: 680px) {
+  .partner-detail-grid {
+    grid-template-columns: 1fr;
+  }
+  .partner-tabs-nav {
+    gap: 8px;
+  }
+  .partner-tab-btn {
+    padding: 9px 15px;
+    font-size: 0.84rem;
+  }
+}
+
+/* ==========================================================================
    Floating Quick Action Buttons
    ========================================================================== */
 .floating-contact {
@@ -2032,8 +2733,9 @@ textarea:focus {
       <nav class="nav-menu" id="navMenu">
         <a href="#hero" class="nav-link active">Home</a>
         <a href="#ecosystem" class="nav-link">Ecosystem</a>
-        <a href="#verticals" class="nav-link">8 Business Verticals</a>
-        <a href="#foundation" class="nav-link">Shared Foundation</a>
+        <a href="#verticals" class="nav-link">8 Verticals</a>
+        <a href="#partners" class="nav-link">Product Partners</a>
+        <a href="#foundation" class="nav-link">Foundation</a>
         <a href="#impact" class="nav-link">Our Impact</a>
         <a href="#connect" class="nav-link nav-btn-cta">
           <i class="fa-solid fa-handshake"></i> Partner With Us
@@ -2563,6 +3265,607 @@ textarea:focus {
     </div>
   </section>
 
+  <!-- ================================================================
+       Product Partners Section
+  ================================================================ -->
+  <section class="partners-section" id="partners">
+    <div class="container">
+
+      <div class="section-header text-center">
+        <span class="section-tag">Ecosystem Alliances</span>
+        <h2 class="section-title">Product Partners</h2>
+        <p class="section-subtitle">
+          Dedicated products built and powered within the LA Solution ecosystem — each a category leader in its domain, delivering real value to millions.
+        </p>
+      </div>
+
+            <!-- Tab Navigation -->
+      <div class="partner-tabs-nav" role="tablist" aria-label="Product Partners">
+        <button class="partner-tab-btn active" id="tab-btn-fg" role="tab" aria-selected="true" aria-controls="tab-fg" onclick="switchPartnerTab('fg')">
+          <span class="tab-icon"><i class="fa-solid fa-dumbbell"></i></span>
+          Fitness Guru
+        </button>
+        <button class="partner-tab-btn" id="tab-btn-sw" role="tab" aria-selected="false" aria-controls="tab-sw" onclick="switchPartnerTab('sw')">
+          <span class="tab-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+          Starkwizz
+        </button>
+        <button class="partner-tab-btn" id="tab-btn-sa" role="tab" aria-selected="false" aria-controls="tab-sa" onclick="switchPartnerTab('sa')">
+          <span class="tab-icon"><i class="fa-solid fa-car"></i></span>
+          Smart Auto
+        </button>
+        <button class="partner-tab-btn" id="tab-btn-pr" role="tab" aria-selected="false" aria-controls="tab-pr" onclick="switchPartnerTab('pr')">
+          <span class="tab-icon"><i class="fa-solid fa-utensils"></i></span>
+          Penta Restaurant
+        </button>
+      </div>
+
+      <!-- ==================== TAB: FITNESS GURU ==================== -->
+      <div class="partner-tab-content active partner-fg" id="tab-fg" role="tabpanel" aria-labelledby="tab-btn-fg">
+
+        <div class="partner-hero-card">
+          <div class="partner-hero-left">
+            <div class="partner-badge-wrap">
+              <div class="partner-logo-icon"><i class="fa-solid fa-dumbbell"></i></div>
+              <div class="partner-name-block">
+                <span class="partner-name">Fitness Guru</span>
+                <span class="partner-tagline-pill">Simple &amp; Smart Gym Management App</span>
+              </div>
+            </div>
+            <p class="partner-desc">
+              Fitness Guru is a simple and smart gym management app designed to track member attendance and manage subscriptions easily. It helps gym owners monitor upcoming renewals, track active members, and maintain organised records — all in one unified digital dashboard.
+            </p>
+            <div class="partner-hero-stats">
+              <div class="p-stat">
+                <span class="p-stat-val">100%</span>
+                <span class="p-stat-lbl">Organised Records</span>
+              </div>
+              <div class="p-stat">
+                <span class="p-stat-val">Real-Time</span>
+                <span class="p-stat-lbl">Member Attendance</span>
+              </div>
+              <div class="p-stat">
+                <span class="p-stat-val">Instant</span>
+                <span class="p-stat-lbl">Renewal Monitoring</span>
+              </div>
+            </div>
+            <div class="partner-hero-cta">
+              <a href="https://fitnessguru.org.in/" target="_blank" rel="noopener noreferrer" class="btn-partner-primary">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Visit FitnessGuru
+              </a>
+              <button type="button" class="btn-partner-secondary" onclick="preselectVertical('Fitness Guru - Gym Management App')">
+                <i class="fa-solid fa-handshake"></i> Partner With Us
+              </button>
+            </div>
+          </div>
+          <div class="partner-hero-right">
+            <div class="partner-device-showcase">
+              <div class="floating-pills-left">
+                <span class="float-pill"><i class="fa-solid fa-qrcode"></i> QR Check-In</span>
+                <span class="float-pill"><i class="fa-solid fa-clock-rotate-left"></i> Shift Tracker</span>
+              </div>
+              <div class="phone-frame">
+                <div class="phone-speaker-island"></div>
+                <div class="phone-screen" id="slideshow-fg">
+                  <div class="slide-track">
+                    <div class="slide-item active">
+                      <img src="assets/fitnesss-guru/unnamed (4).webp" alt="Fitness Guru Dashboard &amp; Schedule" loading="lazy">
+                      <div class="slide-caption">Dashboard &amp; Schedule</div>
+                    </div>
+                    <div class="slide-item">
+                      <img src="assets/fitnesss-guru/unnamed (2).webp" alt="Attendance Details &amp; Shifts" loading="lazy">
+                      <div class="slide-caption">Attendance Details &amp; Shifts</div>
+                    </div>
+                    <div class="slide-item">
+                      <img src="assets/fitnesss-guru/unnamed (1).webp" alt="Assessment History &amp; Score Analytics" loading="lazy">
+                      <div class="slide-caption">Assessment &amp; Score Analytics</div>
+                    </div>
+                    <div class="slide-item">
+                      <img src="assets/fitnesss-guru/unnamed (3).webp" alt="Member Profile &amp; Body Metrics" loading="lazy">
+                      <div class="slide-caption">Member Profile &amp; Metrics</div>
+                    </div>
+                    <div class="slide-item">
+                      <img src="assets/fitnesss-guru/unnamed.webp" alt="Fitness Guru App Overview" loading="lazy">
+                      <div class="slide-caption">App Overview &amp; Features</div>
+                    </div>
+                  </div>
+                  <button class="slide-nav-btn prev" aria-label="Previous Slide" onclick="moveSlide('fg', -1)">
+                    <i class="fa-solid fa-chevron-left"></i>
+                  </button>
+                  <button class="slide-nav-btn next" aria-label="Next Slide" onclick="moveSlide('fg', 1)">
+                    <i class="fa-solid fa-chevron-right"></i>
+                  </button>
+                  <div class="slide-dots">
+                    <button class="slide-dot active" aria-label="Slide 1" onclick="goToSlide('fg', 0)"></button>
+                    <button class="slide-dot" aria-label="Slide 2" onclick="goToSlide('fg', 1)"></button>
+                    <button class="slide-dot" aria-label="Slide 3" onclick="goToSlide('fg', 2)"></button>
+                    <button class="slide-dot" aria-label="Slide 4" onclick="goToSlide('fg', 3)"></button>
+                    <button class="slide-dot" aria-label="Slide 5" onclick="goToSlide('fg', 4)"></button>
+                  </div>
+                </div>
+              </div>
+              <div class="floating-pills-right">
+                <span class="float-pill"><i class="fa-solid fa-bell"></i> Renewal Alerts</span>
+                <span class="float-pill"><i class="fa-solid fa-users-viewfinder"></i> Active Members</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="partner-detail-grid">
+          <div class="partner-detail-card">
+            <div class="pdc-icon"><i class="fa-solid fa-clipboard-user"></i></div>
+            <h3 class="pdc-title">Attendance &amp; Shift Tracking</h3>
+            <ul class="pdc-list">
+              <li><i class="fa-regular fa-circle-check"></i> Instant QR code &amp; one-tap member check-in/out</li>
+              <li><i class="fa-regular fa-circle-check"></i> Multi-shift tracking for morning &amp; evening batches</li>
+              <li><i class="fa-regular fa-circle-check"></i> Workout hours and daily streak monitoring</li>
+              <li><i class="fa-regular fa-circle-check"></i> Live count of active members on the gym floor</li>
+              <li><i class="fa-regular fa-circle-check"></i> Exportable monthly attendance summaries for owners</li>
+            </ul>
+          </div>
+          <div class="partner-detail-card">
+            <div class="pdc-icon"><i class="fa-solid fa-bell"></i></div>
+            <h3 class="pdc-title">Subscription &amp; Renewal Management</h3>
+            <ul class="pdc-list">
+              <li><i class="fa-regular fa-circle-check"></i> Simple membership plan &amp; subscription tier setup</li>
+              <li><i class="fa-regular fa-circle-check"></i> Real-time tracking of active, expiring &amp; expired members</li>
+              <li><i class="fa-regular fa-circle-check"></i> Automated renewal alerts so owners never miss an expiry</li>
+              <li><i class="fa-regular fa-circle-check"></i> Cash, UPI &amp; card subscription payment logging</li>
+              <li><i class="fa-regular fa-circle-check"></i> Member renewal statements &amp; complete payment ledger</li>
+            </ul>
+          </div>
+          <div class="partner-detail-card">
+            <div class="pdc-icon"><i class="fa-solid fa-id-card"></i></div>
+            <h3 class="pdc-title">Member Profiles &amp; Health Metrics</h3>
+            <ul class="pdc-list">
+              <li><i class="fa-regular fa-circle-check"></i> Centralised digital member directory with contact details</li>
+              <li><i class="fa-regular fa-circle-check"></i> Body metrics tracking: height, weight, BMI &amp; body fat %</li>
+              <li><i class="fa-regular fa-circle-check"></i> Monthly fitness assessment journey &amp; score analytics</li>
+              <li><i class="fa-regular fa-circle-check"></i> Personalized workout schedule &amp; routine monitoring</li>
+              <li><i class="fa-regular fa-circle-check"></i> Emergency contact &amp; blood group health records</li>
+            </ul>
+          </div>
+          <div class="partner-revenue-strip">
+            <span class="prs-label"><i class="fa-solid fa-money-bill-trend-up"></i> REVENUE MODEL</span>
+            <div class="prs-items">
+              <span class="prs-pill">Monthly Gym SaaS Subscriptions</span>
+              <span class="prs-pill">Annual Fitness Studio Licenses</span>
+              <span class="prs-pill">Multi-Club Chain Packages</span>
+              <span class="prs-pill">Automated SMS &amp; WhatsApp Packs</span>
+              <span class="prs-pill">Member App Subscriptions</span>
+              <span class="prs-pill">Custom Gym Branding Add-ons</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tab-fg -->
+
+      <!-- ==================== TAB: STARKWIZZ ==================== -->
+      <div class="partner-tab-content partner-sw" id="tab-sw" role="tabpanel" aria-labelledby="tab-btn-sw">
+
+        <div class="partner-hero-card">
+          <div class="partner-hero-left">
+            <div class="partner-badge-wrap">
+              <div class="partner-logo-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+              <div class="partner-name-block">
+                <span class="partner-name">Starkwizz</span>
+                <span class="partner-tagline-pill">Child-Safe Learning &amp; Self-Assessment Platform</span>
+              </div>
+            </div>
+            <p class="partner-desc">
+              Starkwizz is a safe, child-friendly learning platform designed for CBSE &amp; ICSE board school children (Grade 3 to 10). It supports academic growth through chapter-wise self-assessment, weekly quiz contests, and talent search exams (STSE) — helping children learn independently, confidently, and stress-free in just 15–30 minutes a day.
+            </p>
+            <div class="partner-hero-stats">
+              <div class="p-stat">
+                <span class="p-stat-val">Grades 3–10</span>
+                <span class="p-stat-lbl">CBSE &amp; ICSE Boards</span>
+              </div>
+              <div class="p-stat">
+                <span class="p-stat-val">100%</span>
+                <span class="p-stat-lbl">Child-Safe (No Ads)</span>
+              </div>
+              <div class="p-stat">
+                <span class="p-stat-val">15–30 Min</span>
+                <span class="p-stat-lbl">Daily Smart Practice</span>
+              </div>
+            </div>
+            <div class="partner-hero-cta">
+              <a href="#connect" class="btn-partner-primary" onclick="preselectVertical('Starkwizz - CBSE &amp; ICSE Learning Platform')">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Explore Starkwizz
+              </a>
+              <button type="button" class="btn-partner-secondary" onclick="preselectVertical('Starkwizz - CBSE &amp; ICSE Learning Platform')">
+                <i class="fa-solid fa-handshake"></i> Partner With Us
+              </button>
+            </div>
+          </div>
+          <div class="partner-hero-right">
+            <div class="partner-device-showcase">
+              <div class="floating-pills-left">
+                <span class="float-pill"><i class="fa-solid fa-brain"></i> Dynamo Engine</span>
+                <span class="float-pill"><i class="fa-solid fa-book-open"></i> Chapter Tests</span>
+              </div>
+              <div class="phone-frame">
+                <div class="phone-speaker-island"></div>
+                <div class="phone-screen" id="slideshow-sw">
+                  <div class="slide-track">
+                    <div class="slide-item active">
+                      <img src="assets/starkwizz/unnamed.webp" alt="Starkwizz Talent Search Exam &amp; Quiz Whizz" loading="lazy">
+                      <div class="slide-caption">STSE Talent Exam &amp; Quiz Whizz</div>
+                    </div>
+                    <div class="slide-item">
+                      <img src="assets/starkwizz/unnamed (3).webp" alt="Starkwizz Events &amp; Dynamo Hub" loading="lazy">
+                      <div class="slide-caption">Events &amp; Dynamo Adaptive Hub</div>
+                    </div>
+                    <div class="slide-item">
+                      <img src="assets/starkwizz/unnamed (2).webp" alt="Interactive Quiz with Timer" loading="lazy">
+                      <div class="slide-caption">Live Quiz &amp; Countdown Timer</div>
+                    </div>
+                    <div class="slide-item">
+                      <img src="assets/starkwizz/unnamed (1).webp" alt="Test Score &amp; Performance Analysis" loading="lazy">
+                      <div class="slide-caption">Score Analysis &amp; Insights</div>
+                    </div>
+                  </div>
+                  <button class="slide-nav-btn prev" aria-label="Previous Slide" onclick="moveSlide('sw', -1)">
+                    <i class="fa-solid fa-chevron-left"></i>
+                  </button>
+                  <button class="slide-nav-btn next" aria-label="Next Slide" onclick="moveSlide('sw', 1)">
+                    <i class="fa-solid fa-chevron-right"></i>
+                  </button>
+                  <div class="slide-dots">
+                    <button class="slide-dot active" aria-label="Slide 1" onclick="goToSlide('sw', 0)"></button>
+                    <button class="slide-dot" aria-label="Slide 2" onclick="goToSlide('sw', 1)"></button>
+                    <button class="slide-dot" aria-label="Slide 3" onclick="goToSlide('sw', 2)"></button>
+                    <button class="slide-dot" aria-label="Slide 4" onclick="goToSlide('sw', 3)"></button>
+                  </div>
+                </div>
+              </div>
+              <div class="floating-pills-right">
+                <span class="float-pill"><i class="fa-solid fa-trophy"></i> Sunday Quizzes</span>
+                <span class="float-pill"><i class="fa-solid fa-shield-halved"></i> 100% Child-Safe</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="partner-detail-grid">
+          <div class="partner-detail-card">
+            <div class="pdc-icon"><i class="fa-solid fa-book-bookmark"></i></div>
+            <h3 class="pdc-title">Chapter Self-Assessment &amp; Dynamo</h3>
+            <ul class="pdc-list">
+              <li><i class="fa-regular fa-circle-check"></i> Practice CBSE &amp; ICSE school lessons anytime, self-paced</li>
+              <li><i class="fa-regular fa-circle-check"></i> Smart evaluation on Dynamo platform with adaptive questions</li>
+              <li><i class="fa-regular fa-circle-check"></i> Pinpoint weak areas with clear progress reports &amp; insights</li>
+              <li><i class="fa-regular fa-circle-check"></i> Moral support practice tests for weaker children up to 100%</li>
+              <li><i class="fa-regular fa-circle-check"></i> Builds memory, analytical, time management &amp; problem-solving</li>
+            </ul>
+          </div>
+          <div class="partner-detail-card">
+            <div class="pdc-icon"><i class="fa-solid fa-trophy"></i></div>
+            <h3 class="pdc-title">Sunday Quizzes &amp; Talent Exams (STSE)</h3>
+            <ul class="pdc-list">
+              <li><i class="fa-regular fa-circle-check"></i> Sunday quiz contests on general awareness &amp; real situations</li>
+              <li><i class="fa-regular fa-circle-check"></i> Holiday and event-based STSE academic competitions</li>
+              <li><i class="fa-regular fa-circle-check"></i> Compare ranks at National, State, District &amp; School levels</li>
+              <li><i class="fa-regular fa-circle-check"></i> Unlock certificates, medals, trophies, mementos &amp; cash prizes</li>
+              <li><i class="fa-regular fa-circle-check"></i> Eliminates exam fear and builds genuine academic curiosity</li>
+            </ul>
+          </div>
+          <div class="partner-detail-card">
+            <div class="pdc-icon"><i class="fa-solid fa-school"></i></div>
+            <h3 class="pdc-title">Parent Dashboard &amp; School Solutions</h3>
+            <ul class="pdc-list">
+              <li><i class="fa-regular fa-circle-check"></i> Parent dashboard tracking chapter completion &amp; learning trends</li>
+              <li><i class="fa-regular fa-circle-check"></i> Productive screen time: zero ads, zero social media, no distractions</li>
+              <li><i class="fa-regular fa-circle-check"></i> Ready-to-use assessments &amp; student analytics for schools</li>
+              <li><i class="fa-regular fa-circle-check"></i> Class-wise learning insights &amp; talent identification support</li>
+              <li><i class="fa-regular fa-circle-check"></i> Safe, encrypted student data protecting child privacy</li>
+            </ul>
+          </div>
+          <div class="partner-revenue-strip">
+            <span class="prs-label"><i class="fa-solid fa-money-bill-trend-up"></i> REVENUE MODEL</span>
+            <div class="prs-items">
+              <span class="prs-pill">Annual Student Learning Subscriptions</span>
+              <span class="prs-pill">STSE Talent Search Exam Entry Fees</span>
+              <span class="prs-pill">School &amp; Institutional Assessment Licenses</span>
+              <span class="prs-pill">Sunday Quiz Contest Entry Passes</span>
+              <span class="prs-pill">Dynamo Adaptive Learning Engine Add-on</span>
+              <span class="prs-pill">Merit Certification &amp; Award Programs</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tab-sw -->
+
+      <!-- ==================== TAB: SMART AUTO ==================== -->
+      <div class="partner-tab-content partner-sa" id="tab-sa" role="tabpanel" aria-labelledby="tab-btn-sa">
+
+        <div class="partner-hero-card">
+          <div class="partner-hero-left">
+            <div class="partner-badge-wrap">
+              <div class="partner-logo-icon"><i class="fa-solid fa-car"></i></div>
+              <div class="partner-name-block">
+                <span class="partner-name">SmartAuto</span>
+                <span class="partner-tagline-pill">City Rides, Intercity Trips, Rentals &amp; Parcel Delivery</span>
+              </div>
+            </div>
+            <p class="partner-desc">
+              SmartAuto makes getting around simple, safe, and affordable through an integrated dual-app ecosystem for riders and driver partners. Whether booking an instant auto or cab, planning intercity travel, renting by the hour, or dispatching parcels across town, SmartAuto delivers smooth mobility with upfront pricing, live tracking, and SOS safety.
+            </p>
+            <div class="partner-hero-stats">
+              <div class="p-stat">
+                <span class="p-stat-val">4-in-1</span>
+                <span class="p-stat-lbl">Rides, Intercity, Rentals, Parcels</span>
+              </div>
+              <div class="p-stat">
+                <span class="p-stat-val">5 Languages</span>
+                <span class="p-stat-lbl">EN, HI, AR, FR, DE</span>
+              </div>
+              <div class="p-stat">
+                <span class="p-stat-val">100% Safe</span>
+                <span class="p-stat-lbl">SOS &amp; OTP Security</span>
+              </div>
+            </div>
+            <div class="partner-hero-cta">
+              <a href="#connect" class="btn-partner-primary" onclick="preselectVertical('SmartAuto - Driver &amp; Rider Mobility Platform')">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Get SmartAuto App
+              </a>
+              <button type="button" class="btn-partner-secondary" onclick="preselectVertical('SmartAuto - Driver &amp; Rider Mobility Platform')">
+                <i class="fa-solid fa-handshake"></i> Partner With Us
+              </button>
+            </div>
+          </div>
+          <div class="partner-hero-right">
+            <div class="partner-device-showcase">
+              <div class="floating-pills-left">
+                <span class="float-pill"><i class="fa-solid fa-taxi"></i> Auto &amp; Cab</span>
+                <span class="float-pill"><i class="fa-solid fa-box"></i> City Parcels</span>
+              </div>
+              <div class="phone-frame">
+                <div class="phone-speaker-island"></div>
+                <div class="phone-screen" id="slideshow-sa">
+                  <div class="slide-track">
+                    <div class="slide-item active">
+                      <img src="assets/smart-auto/unnamed (5).webp" alt="User App: Find Your Ride (Auto, SUV, Mini)" loading="lazy">
+                      <div class="slide-caption">User App: Compare &amp; Book Rides</div>
+                    </div>
+                    <div class="slide-item">
+                      <img src="assets/smart-auto/unnamed.webp" alt="Driver App: Search Intercity Rides" loading="lazy">
+                      <div class="slide-caption">Driver App: Intercity Trips</div>
+                    </div>
+                    <div class="slide-item">
+                      <img src="assets/smart-auto/unnamed (1).webp" alt="Easy Pickup &amp; Drop Selection" loading="lazy">
+                      <div class="slide-caption">Live Map Pickup &amp; Drop Flow</div>
+                    </div>
+                    <div class="slide-item">
+                      <img src="assets/smart-auto/unnamed (2).webp" alt="Ride History &amp; Statements" loading="lazy">
+                      <div class="slide-caption">Ride History &amp; Receipts</div>
+                    </div>
+                    <div class="slide-item">
+                      <img src="assets/smart-auto/unnamed (3).webp" alt="Driver Wallet &amp; Bank Withdrawal" loading="lazy">
+                      <div class="slide-caption">Earnings &amp; Wallet Withdrawals</div>
+                    </div>
+                    <div class="slide-item">
+                      <img src="assets/smart-auto/unnamed (4).webp" alt="Quick Driver Onboarding" loading="lazy">
+                      <div class="slide-caption">Fast Document Verification</div>
+                    </div>
+                    <div class="slide-item">
+                      <img src="assets/smart-auto/unnamed (6).webp" alt="SOS Safety &amp; Emergency Support" loading="lazy">
+                      <div class="slide-caption">SOS Button &amp; 24/7 Support</div>
+                    </div>
+                  </div>
+                  <button class="slide-nav-btn prev" aria-label="Previous Slide" onclick="moveSlide('sa', -1)">
+                    <i class="fa-solid fa-chevron-left"></i>
+                  </button>
+                  <button class="slide-nav-btn next" aria-label="Next Slide" onclick="moveSlide('sa', 1)">
+                    <i class="fa-solid fa-chevron-right"></i>
+                  </button>
+                  <div class="slide-dots">
+                    <button class="slide-dot active" aria-label="Slide 1" onclick="goToSlide('sa', 0)"></button>
+                    <button class="slide-dot" aria-label="Slide 2" onclick="goToSlide('sa', 1)"></button>
+                    <button class="slide-dot" aria-label="Slide 3" onclick="goToSlide('sa', 2)"></button>
+                    <button class="slide-dot" aria-label="Slide 4" onclick="goToSlide('sa', 3)"></button>
+                    <button class="slide-dot" aria-label="Slide 5" onclick="goToSlide('sa', 4)"></button>
+                    <button class="slide-dot" aria-label="Slide 6" onclick="goToSlide('sa', 5)"></button>
+                    <button class="slide-dot" aria-label="Slide 7" onclick="goToSlide('sa', 6)"></button>
+                  </div>
+                </div>
+              </div>
+              <div class="floating-pills-right">
+                <span class="float-pill"><i class="fa-solid fa-shield-halved"></i> SOS &amp; OTP</span>
+                <span class="float-pill"><i class="fa-solid fa-wallet"></i> Driver Wallet</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="partner-detail-grid">
+          <div class="partner-detail-card">
+            <div class="pdc-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+            <h3 class="pdc-title">SmartAuto User: Rides &amp; Logistics</h3>
+            <ul class="pdc-list">
+              <li><i class="fa-regular fa-circle-check"></i> City Rides: book an auto or cab instantly for daily travel</li>
+              <li><i class="fa-regular fa-circle-check"></i> Intercity Trips: travel between cities with upfront fares</li>
+              <li><i class="fa-regular fa-circle-check"></i> Rentals: hire a vehicle with driver by the hour</li>
+              <li><i class="fa-regular fa-circle-check"></i> Parcel Delivery: send packages across town with live tracking</li>
+              <li><i class="fa-regular fa-circle-check"></i> Cash, in-app wallet &amp; secure online payments with coupons</li>
+            </ul>
+          </div>
+          <div class="partner-detail-card">
+            <div class="pdc-icon"><i class="fa-solid fa-id-card-clip"></i></div>
+            <h3 class="pdc-title">SmartAuto Driver: Partner Platform</h3>
+            <ul class="pdc-list">
+              <li><i class="fa-regular fa-circle-check"></i> Go online whenever you want to receive nearby requests</li>
+              <li><i class="fa-regular fa-circle-check"></i> Search &amp; pick lucrative intercity trips that fit your route</li>
+              <li><i class="fa-regular fa-circle-check"></i> Turn-by-turn map navigation to pickup and drop locations</li>
+              <li><i class="fa-regular fa-circle-check"></i> Full trip statements, wallet management &amp; bank payouts</li>
+              <li><i class="fa-regular fa-circle-check"></i> Quick onboarding: mobile signup, document upload &amp; fast approval</li>
+            </ul>
+          </div>
+          <div class="partner-detail-card">
+            <div class="pdc-icon"><i class="fa-solid fa-shield-cat"></i></div>
+            <h3 class="pdc-title">Safety, Trust &amp; Global Languages</h3>
+            <ul class="pdc-list">
+              <li><i class="fa-regular fa-circle-check"></i> In-trip SOS emergency button and emergency contact alerts</li>
+              <li><i class="fa-regular fa-circle-check"></i> OTP verification ensures passengers board the correct vehicle</li>
+              <li><i class="fa-regular fa-circle-check"></i> Secure in-app driver-rider chat without sharing phone numbers</li>
+              <li><i class="fa-regular fa-circle-check"></i> Driver achievement badges, referral bonuses &amp; rating system</li>
+              <li><i class="fa-regular fa-circle-check"></i> Localized in English, Hindi, Arabic, French, and German</li>
+            </ul>
+          </div>
+          <div class="partner-revenue-strip">
+            <span class="prs-label"><i class="fa-solid fa-money-bill-trend-up"></i> REVENUE MODEL</span>
+            <div class="prs-items">
+              <span class="prs-pill">Per-Ride Platform Commission</span>
+              <span class="prs-pill">Driver Daily &amp; Monthly Subscription Passes</span>
+              <span class="prs-pill">Parcel Delivery Fulfillment Fees</span>
+              <span class="prs-pill">Intercity Travel Convenience Margins</span>
+              <span class="prs-pill">Hourly Rental Surcharges</span>
+              <span class="prs-pill">Corporate Mobility &amp; Fleet Contracts</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tab-sa -->
+
+      <!-- ==================== TAB: PENTA RESTAURANT ==================== -->
+      <div class="partner-tab-content partner-pr" id="tab-pr" role="tabpanel" aria-labelledby="tab-btn-pr">
+
+        <div class="partner-hero-card">
+          <div class="partner-hero-left">
+            <div class="partner-badge-wrap">
+              <div class="partner-logo-icon"><i class="fa-solid fa-utensils"></i></div>
+              <div class="partner-name-block">
+                <span class="partner-name">Penta Restaurant</span>
+                <span class="partner-tagline-pill">Official Doorstep Food Delivery &amp; Ordering App</span>
+              </div>
+            </div>
+            <p class="partner-desc">
+              Penta Restaurant is the official food ordering and delivery app for Penta Restaurant. Customers can easily browse the complete multi-cuisine menu (Indian, Chinese, Tandoori &amp; Thai), customize dishes, and order online for hot and tasty food delivered right to their doorstep by dedicated delivery staff.
+            </p>
+            <div class="partner-hero-stats">
+              <div class="p-stat">
+                <span class="p-stat-val">Multi-Cuisine</span>
+                <span class="p-stat-lbl">Indian, Chinese, Tandoori, Thai</span>
+              </div>
+              <div class="p-stat">
+                <span class="p-stat-val">Hot &amp; Fresh</span>
+                <span class="p-stat-lbl">Dedicated Doorstep Delivery</span>
+              </div>
+              <div class="p-stat">
+                <span class="p-stat-val">Direct Order</span>
+                <span class="p-stat-lbl">Zero Aggregator Markup</span>
+              </div>
+            </div>
+            <div class="partner-hero-cta">
+              <a href="#connect" class="btn-partner-primary" onclick="preselectVertical('Penta Restaurant - Food Delivery App')">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Order on Penta App
+              </a>
+              <button type="button" class="btn-partner-secondary" onclick="preselectVertical('Penta Restaurant - Food Delivery App')">
+                <i class="fa-solid fa-handshake"></i> Partner With Us
+              </button>
+            </div>
+          </div>
+          <div class="partner-hero-right">
+            <div class="partner-device-showcase">
+              <div class="floating-pills-left">
+                <span class="float-pill"><i class="fa-solid fa-bowl-hot"></i> Hot Delivery</span>
+                <span class="float-pill"><i class="fa-solid fa-plate-wheat"></i> Multi-Cuisine</span>
+              </div>
+              <div class="phone-frame">
+                <div class="phone-speaker-island"></div>
+                <div class="phone-screen" id="slideshow-pr">
+                  <div class="slide-track">
+                    <div class="slide-item active">
+                      <img src="assets/penta-resturant/unnamed (5).webp" alt="Penta Family Restaurant &amp; Specialties" loading="lazy">
+                      <div class="slide-caption">Penta Family Restaurant &amp; Specials</div>
+                    </div>
+                    <div class="slide-item">
+                      <img src="assets/penta-resturant/unnamed (2).webp" alt="Customer App: Profile, Orders &amp; Cart" loading="lazy">
+                      <div class="slide-caption">Orders, Favorites &amp; Cart</div>
+                    </div>
+                    <div class="slide-item">
+                      <img src="assets/penta-resturant/unnamed (1).webp" alt="Doorstep Delivery Address &amp; Profile" loading="lazy">
+                      <div class="slide-caption">Address Book &amp; Profile</div>
+                    </div>
+                    <div class="slide-item">
+                      <img src="assets/penta-resturant/unnamed.webp" alt="About Us, Opening Hours &amp; Contact" loading="lazy">
+                      <div class="slide-caption">About Us, Hours &amp; Contact</div>
+                    </div>
+                  </div>
+                  <button class="slide-nav-btn prev" aria-label="Previous Slide" onclick="moveSlide('pr', -1)">
+                    <i class="fa-solid fa-chevron-left"></i>
+                  </button>
+                  <button class="slide-nav-btn next" aria-label="Next Slide" onclick="moveSlide('pr', 1)">
+                    <i class="fa-solid fa-chevron-right"></i>
+                  </button>
+                  <div class="slide-dots">
+                    <button class="slide-dot active" aria-label="Slide 1" onclick="goToSlide('pr', 0)"></button>
+                    <button class="slide-dot" aria-label="Slide 2" onclick="goToSlide('pr', 1)"></button>
+                    <button class="slide-dot" aria-label="Slide 3" onclick="goToSlide('pr', 2)"></button>
+                    <button class="slide-dot" aria-label="Slide 4" onclick="goToSlide('pr', 3)"></button>
+                  </div>
+                </div>
+              </div>
+              <div class="floating-pills-right">
+                <span class="float-pill"><i class="fa-solid fa-cart-shopping"></i> Quick Order</span>
+                <span class="float-pill"><i class="fa-solid fa-champagne-glasses"></i> Party Catering</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="partner-detail-grid">
+          <div class="partner-detail-card">
+            <div class="pdc-icon"><i class="fa-solid fa-bowl-food"></i></div>
+            <h3 class="pdc-title">Online Food Ordering &amp; Menu</h3>
+            <ul class="pdc-list">
+              <li><i class="fa-regular fa-circle-check"></i> Explore complete food items easily with high-res photos</li>
+              <li><i class="fa-regular fa-circle-check"></i> Indian, Chinese, Tandoori, and Thai gourmet selections</li>
+              <li><i class="fa-regular fa-circle-check"></i> Effortless in-app search to find favorite dishes instantly</li>
+              <li><i class="fa-regular fa-circle-check"></i> Seamless one-tap add to cart with cooking instructions</li>
+              <li><i class="fa-regular fa-circle-check"></i> Direct restaurant ordering with zero third-party markups</li>
+            </ul>
+          </div>
+          <div class="partner-detail-card">
+            <div class="pdc-icon"><i class="fa-solid fa-person-biking"></i></div>
+            <h3 class="pdc-title">Dedicated Doorstep Delivery</h3>
+            <ul class="pdc-list">
+              <li><i class="fa-regular fa-circle-check"></i> Dedicated delivery staff ensuring food reaches hot and tasty</li>
+              <li><i class="fa-regular fa-circle-check"></i> Delivered right to your doorstep across Bhanjanagar &amp; beyond</li>
+              <li><i class="fa-regular fa-circle-check"></i> Insulated fresh thermal packaging protecting rich flavours</li>
+              <li><i class="fa-regular fa-circle-check"></i> Exact address capture with locality, flat number &amp; landmark</li>
+              <li><i class="fa-regular fa-circle-check"></i> SMS and in-app notifications on order status &amp; dispatch</li>
+            </ul>
+          </div>
+          <div class="partner-detail-card">
+            <div class="pdc-icon"><i class="fa-solid fa-cake-candles"></i></div>
+            <h3 class="pdc-title">Customer Accounts &amp; Party Bookings</h3>
+            <ul class="pdc-list">
+              <li><i class="fa-regular fa-circle-check"></i> Personalized customer profile with saved address book</li>
+              <li><i class="fa-regular fa-circle-check"></i> Past order history for quick, effortless repeat orders</li>
+              <li><i class="fa-regular fa-circle-check"></i> Direct phone call &amp; WhatsApp support (+91 9938520320)</li>
+              <li><i class="fa-regular fa-circle-check"></i> Catering booking for Conference Hall, Birthdays &amp; Kitty Parties</li>
+              <li><i class="fa-regular fa-circle-check"></i> Opt-in notifications for daily chef specials &amp; festival offers</li>
+            </ul>
+          </div>
+          <div class="partner-revenue-strip">
+            <span class="prs-label"><i class="fa-solid fa-money-bill-trend-up"></i> REVENUE MODEL</span>
+            <div class="prs-items">
+              <span class="prs-pill">Direct Online Food Order Sales</span>
+              <span class="prs-pill">Conference Hall &amp; Party Bulk Catering</span>
+              <span class="prs-pill">Doorstep Delivery Service Charges</span>
+              <span class="prs-pill">Chef Special Combos &amp; Weekend Feasts</span>
+              <span class="prs-pill">Customer Loyalty Rewards &amp; Reorders</span>
+              <span class="prs-pill">Direct Mobile &amp; WhatsApp Orders</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tab-pr -->
+
+    </div>
+  </section>
+
   <!-- Shared Foundation Section -->
   <section class="foundation-section" id="foundation">
     <div class="container">
@@ -2787,16 +4090,24 @@ textarea:focus {
               <div class="input-with-icon">
                 <i class="fa-solid fa-umbrella"></i>
                 <select id="verticalInterest" name="verticalInterest" required>
-                  <option value="" disabled selected>Select Vertical</option>
+                  <option value="" disabled selected>Select Vertical / Product</option>
                   <option value="All Verticals (Entire Umbrella Ecosystem)">All Verticals (Entire Umbrella Ecosystem)</option>
-                  <option value="Gramsanjog.in - News & Media Platform">1. Gramsanjog.in - News & Media Platform</option>
-                  <option value="LASA - Local Area Service & Assistant">2. LASA - Local Area Service & Assistant</option>
-                  <option value="LASolution.in - Digital Solutions & Training">3. LASolution.in - Digital Solutions & Training</option>
-                  <option value="EzyBillingApp.in - Cloud Billing Solution">4. EzyBillingApp.in - Cloud Billing Solution</option>
-                  <option value="Political Party Member Support">5. Political Party Member Support</option>
-                  <option value="FitnessGuru.org.in - Gym Management">6. FitnessGuru.org.in - Gym Management</option>
-                  <option value="SarpanchPrarthi.com - Election Management">7. SarpanchPrarthi.com - Election Management</option>
-                  <option value="Food Ordering & Ecommerce Platform">8. Food Ordering & Ecommerce Platform</option>
+                  <optgroup label="Core Business Verticals">
+                    <option value="Gramsanjog.in - News & Media Platform">1. Gramsanjog.in - News & Media Platform</option>
+                    <option value="LASA - Local Area Service & Assistant">2. LASA - Local Area Service & Assistant</option>
+                    <option value="LASolution.in - Digital Solutions & Training">3. LASolution.in - Digital Solutions & Training</option>
+                    <option value="EzyBillingApp.in - Cloud Billing Solution">4. EzyBillingApp.in - Cloud Billing Solution</option>
+                    <option value="Political Party Member Support">5. Political Party Member Support</option>
+                    <option value="FitnessGuru.org.in - Gym Management">6. FitnessGuru.org.in - Gym Management</option>
+                    <option value="SarpanchPrarthi.com - Election Management">7. SarpanchPrarthi.com - Election Management</option>
+                    <option value="Food Ordering & Ecommerce Platform">8. Food Ordering & Ecommerce Platform</option>
+                  </optgroup>
+                  <optgroup label="Product Partners">
+                    <option value="Fitness Guru - Gym Management App">Fitness Guru - Gym Management App</option>
+                    <option value="Starkwizz - CBSE & ICSE Learning Platform">Starkwizz - CBSE & ICSE Learning Platform</option>
+                    <option value="SmartAuto - Driver & Rider Mobility Platform">SmartAuto - Driver & Rider Mobility Platform</option>
+                    <option value="Penta Restaurant - Food Delivery App">Penta Restaurant - Food Delivery App</option>
+                  </optgroup>
                 </select>
               </div>
               <span class="error-msg" id="verticalError"></span>
@@ -2885,9 +4196,10 @@ textarea:focus {
         <ul>
           <li><a href="#hero">Overview</a></li>
           <li><a href="#ecosystem">Umbrella Architecture</a></li>
+          <li><a href="#partners">Product Partners</a></li>
           <li><a href="#foundation">Shared Foundation</a></li>
           <li><a href="#impact">Our Impact</a></li>
-          <li><a href="#connect">Connect & Partner</a></li>
+          <li><a href="#connect">Connect &amp; Partner</a></li>
         </ul>
       </div>
     </div>
@@ -2952,6 +4264,7 @@ document.addEventListener('DOMContentLoaded', () => {
     { id: 'hero', link: document.querySelector('.nav-menu a[href="#hero"]') },
     { id: 'ecosystem', link: document.querySelector('.nav-menu a[href="#ecosystem"]') },
     { id: 'verticals', link: document.querySelector('.nav-menu a[href="#verticals"]') },
+    { id: 'partners', link: document.querySelector('.nav-menu a[href="#partners"]') },
     { id: 'foundation', link: document.querySelector('.nav-menu a[href="#foundation"]') },
     { id: 'impact', link: document.querySelector('.nav-menu a[href="#impact"]') },
     { id: 'connect', link: document.querySelector('.nav-menu a[href="#connect"]') }
@@ -3251,6 +4564,147 @@ function preselectVertical(verticalName) {
   }
 }
 window.preselectVertical = preselectVertical;
+
+/**
+ * Switches active partner tab in the Product Partners section.
+ * Manages ARIA attributes, button active state, and panel visibility.
+ */
+/**
+ * Product Partner Interactive Slideshow Controller
+ * Supports automated loop, drag/touch swipe, dot indicators, and pause on hover.
+ */
+const partnerSlides = {
+  fg: { index: 0, count: 5, timer: null },
+  sw: { index: 0, count: 4, timer: null },
+  sa: { index: 0, count: 7, timer: null },
+  pr: { index: 0, count: 4, timer: null }
+};
+
+function renderSlide(partnerId) {
+  const container = document.getElementById('slideshow-' + partnerId);
+  if (!container) return;
+  const track = container.querySelector('.slide-track');
+  const dots = container.querySelectorAll('.slide-dot');
+  const slides = container.querySelectorAll('.slide-item');
+  const state = partnerSlides[partnerId];
+  if (!track || !state) return;
+
+  const idx = state.index;
+  track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+
+  slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+  dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+}
+
+function moveSlide(partnerId, delta) {
+  const state = partnerSlides[partnerId];
+  if (!state) return;
+  state.index = (state.index + delta + state.count) % state.count;
+  renderSlide(partnerId);
+  resetPartnerTimer(partnerId);
+}
+window.moveSlide = moveSlide;
+
+function goToSlide(partnerId, index) {
+  const state = partnerSlides[partnerId];
+  if (!state) return;
+  state.index = index % state.count;
+  renderSlide(partnerId);
+  resetPartnerTimer(partnerId);
+}
+window.goToSlide = goToSlide;
+
+function startPartnerTimer(partnerId) {
+  stopPartnerTimer(partnerId);
+  partnerSlides[partnerId].timer = setInterval(() => {
+    const panel = document.getElementById('tab-' + partnerId);
+    if (panel && panel.classList.contains('active')) {
+      const state = partnerSlides[partnerId];
+      state.index = (state.index + 1) % state.count;
+      renderSlide(partnerId);
+    }
+  }, 3500);
+}
+
+function stopPartnerTimer(partnerId) {
+  if (partnerSlides[partnerId] && partnerSlides[partnerId].timer) {
+    clearInterval(partnerSlides[partnerId].timer);
+    partnerSlides[partnerId].timer = null;
+  }
+}
+
+function resetPartnerTimer(partnerId) {
+  stopPartnerTimer(partnerId);
+  startPartnerTimer(partnerId);
+}
+
+function initPartnerSlideshows() {
+  Object.keys(partnerSlides).forEach(id => {
+    renderSlide(id);
+    startPartnerTimer(id);
+
+    const container = document.getElementById('slideshow-' + id);
+    if (container) {
+      container.addEventListener('mouseenter', () => stopPartnerTimer(id));
+      container.addEventListener('mouseleave', () => startPartnerTimer(id));
+
+      let touchStartX = 0;
+      container.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].clientX;
+      }, { passive: true });
+
+      container.addEventListener('touchend', (e) => {
+        const touchEndX = e.changedTouches[0].clientX;
+        const diff = touchStartX - touchEndX;
+        if (Math.abs(diff) > 40) {
+          moveSlide(id, diff > 0 ? 1 : -1);
+        }
+      }, { passive: true });
+    }
+  });
+}
+window.initPartnerSlideshows = initPartnerSlideshows;
+
+/**
+ * Switches active partner tab in the Product Partners section.
+ * Manages ARIA attributes, button active state, panel visibility, and resets the slideshow timer.
+ */
+function switchPartnerTab(tabId) {
+  // Deactivate all tab buttons
+  document.querySelectorAll('.partner-tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+    btn.setAttribute('aria-selected', 'false');
+  });
+
+  // Hide all tab panels
+  document.querySelectorAll('.partner-tab-content').forEach(panel => {
+    panel.classList.remove('active');
+  });
+
+  // Activate the clicked tab button
+  const activeBtn = document.getElementById('tab-btn-' + tabId);
+  const activePanel = document.getElementById('tab-' + tabId);
+
+  if (activeBtn) {
+    activeBtn.classList.add('active');
+    activeBtn.setAttribute('aria-selected', 'true');
+  }
+  if (activePanel) {
+    activePanel.classList.add('active');
+  }
+
+  // Refresh slideshow for this tab
+  renderSlide(tabId);
+  resetPartnerTimer(tabId);
+}
+window.switchPartnerTab = switchPartnerTab;
+
+// Auto-initialize slideshows on load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initPartnerSlideshows);
+} else {
+  initPartnerSlideshows();
+}
 
   </script>
 </body>
