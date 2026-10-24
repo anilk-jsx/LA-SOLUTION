@@ -1,0 +1,41 @@
+# ==============================================================================
+# LA SOLUTION PARTNERSHIP - BACKEND APACHE CONFIGURATION
+# Security headers, CORS headers, directory privacy, and UTF-8 enforcement.
+# ==============================================================================
+
+# Disable directory browsing
+Options -Indexes
+
+# Follow symlinks
+Options +FollowSymLinks
+
+# Enable Rewrite Engine
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Block direct access to hidden files and sensitive directories
+    RewriteRule ^config/ - [F,L]
+    RewriteRule ^database/(schema|seed)\.sql$ - [F,L]
+    RewriteRule ^src/ - [F,L]
+
+    # Handle Authorization Header delivery to PHP
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+</IfModule>
+
+# Security & CORS Headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Enable CORS
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+    Header set Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Auth-Token"
+</IfModule>
+
+# Default Charset
+AddDefaultCharset UTF-8

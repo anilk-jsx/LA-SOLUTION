@@ -4423,26 +4423,92 @@ document.addEventListener('DOMContentLoaded', () => {
     return isValid;
   }
 
+  const submitBtn = document.getElementById('submitBtn');
+
   if (form) {
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       if (validateForm()) {
         const formData = {
-          name: fullName.value.trim(),
-          phone: phoneNumber.value.trim(),
-          email: emailAddress.value.trim(),
-          type: partnershipType.value,
-          vertical: verticalInterest.value,
-          location: cityState.value.trim() || 'Not specified',
-          message: message.value.trim() || 'No message provided',
-          timestamp: new Date().toISOString()
+          fullName: fullName.value.trim(),
+          phoneNumber: phoneNumber.value.trim(),
+          emailAddress: emailAddress.value.trim(),
+          partnershipType: partnershipType.value,
+          verticalInterest: verticalInterest.value,
+          cityState: cityState.value.trim() || 'Not specified',
+          message: message.value.trim() || 'No message provided'
         };
 
-        // Store submission in localStorage for persistence
+        // Loading state
+        const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = `<span>Submitting...</span> <i class="fa-solid fa-spinner fa-spin"></i>`;
+        }
+
+        let leadCode = null;
+        let apiSuccess = false;
+
+        try {
+          // Send to PHP Backend API (Auto-resolves based on server setup)
+          const apiCandidates = [
+            '../BACKEND/api/inquiries/index.php',
+            'http://localhost:8000/api/inquiries/index.php',
+            'http://localhost:8000/BACKEND/api/inquiries/index.php'
+          ];
+
+          let resData = null;
+          let response = null;
+
+          for (const endpoint of apiCandidates) {
+            try {
+              response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json'
+                },
+                body: JSON.stringify(formData)
+              });
+
+              if (response.ok) {
+                resData = await response.json();
+                if (resData && resData.success) {
+                  apiSuccess = true;
+                  leadCode = resData.lead_code || (resData.data && resData.data.lead_code);
+                  break;
+                }
+              }
+            } catch (singleErr) {
+              // Try next candidate
+            }
+          }
+        } catch (fetchErr) {
+          console.warn('Backend API unavailable, falling back to local storage:', fetchErr);
+        } finally {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnHtml;
+          }
+        }
+
+        // Store backup in localStorage for offline availability & cross-tab sync
         try {
           const submissions = JSON.parse(localStorage.getItem('la_inquiries') || '[]');
-          submissions.push(formData);
+          submissions.unshift({
+            id: leadCode || `LEAD-${100 + submissions.length + 1}`,
+            name: formData.fullName,
+            phone: formData.phoneNumber,
+            email: formData.emailAddress,
+            type: formData.partnershipType,
+            vertical: formData.verticalInterest,
+            location: formData.cityState,
+            message: formData.message,
+            timestamp: new Date().toISOString(),
+            status: 'New',
+            priority: 'Medium'
+          });
           localStorage.setItem('la_inquiries', JSON.stringify(submissions));
         } catch (err) {
           console.warn('Storage not accessible', err);
@@ -4450,7 +4516,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Show confirmation modal
         if (modalMessage) {
-          modalMessage.innerHTML = `Thank you <strong>${formData.name}</strong>! Your inquiry regarding <strong>${formData.vertical}</strong> (${formData.type}) has been logged. Our leadership team will connect with you via <strong>${formData.phone}</strong> or <strong>${formData.email}</strong> shortly.`;
+          const codeBadge = leadCode ? `<span style="display: inline-block; background: #e0f2fe; color: #0284c7; padding: 2px 8px; border-radius: 6px; font-weight: 700; margin-left: 4px;">${leadCode}</span>` : '';
+          modalMessage.innerHTML = `Thank you <strong>${formData.fullName}</strong>! Your inquiry regarding <strong>${formData.verticalInterest}</strong> (${formData.partnershipType}) has been logged in our database${codeBadge}. Our leadership team will connect with you via <strong>${formData.phoneNumber}</strong> or <strong>${formData.emailAddress}</strong> shortly.`;
         }
         if (successModal) {
           successModal.classList.add('active');

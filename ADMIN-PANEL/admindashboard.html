@@ -2207,16 +2207,73 @@ const SEED_INQUIRIES = [
 ];
 
 /* --------------------------------------------------------------------------
-   2. CRM STATE & LOCAL STORAGE SYNCHRONIZATION
+   2. CRM STATE & BACKEND API SYNCHRONIZATION
    -------------------------------------------------------------------------- */
 const STORAGE_KEY = 'la_inquiries';
+let API_BASE = '../BACKEND/api';
 let leadsList = [];
 let currentPage = 1;
 const pageSize = 8;
 let leadsTrendChartInstance = null;
 let verticalsChartInstance = null;
+let dashboardStatsData = null;
 
-function loadLeadsFromStorage() {
+// Dynamically discover the active API base URL (project root vs backend folder)
+async function resolveApiBase() {
+  const candidates = [
+    '../BACKEND/api',
+    'http://localhost:8000/api',
+    'http://localhost:8000/BACKEND/api',
+    '/api',
+    '/BACKEND/api'
+  ];
+  for (const base of candidates) {
+    try {
+      const test = await fetch(`${base}/health.php`);
+      if (test.ok) {
+        API_BASE = base;
+        return base;
+      }
+    } catch (e) {}
+  }
+  return API_BASE;
+}
+
+async function loadLeadsFromStorage() {
+  await resolveApiBase();
+  try {
+    // 1. Attempt fetching real-time data from PHP Backend API
+    const res = await fetch(`${API_BASE}/inquiries/index.php?limit=100`, {
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (res.ok) {
+      const json = await res.json();
+      if (json.success && Array.isArray(json.data)) {
+        leadsList = json.data.map(item => ({
+          id: item.lead_code || `LEAD-${item.id}`,
+          rawId: item.id,
+          name: item.name || 'Anonymous Lead',
+          phone: item.phone || 'N/A',
+          email: item.email || 'N/A',
+          type: item.interest_type || 'General Partnership',
+          vertical: item.vertical || 'Entire Umbrella Ecosystem',
+          location: item.location || 'Not specified',
+          message: item.message || 'No message provided',
+          timestamp: item.created_at || new Date().toISOString(),
+          status: item.status || 'New',
+          priority: item.priority || 'Medium',
+          notes: item.notes || ''
+        }));
+        saveLeadsToStorage();
+        return;
+      }
+    }
+  } catch (apiErr) {
+    console.warn('Backend API not reachable, loading from browser storage:', apiErr);
+  }
+
+  // 2. Fallback to LocalStorage cache
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
@@ -2227,11 +2284,11 @@ function loadLeadsFromStorage() {
           name: item.name || 'Anonymous Lead',
           phone: item.phone || 'N/A',
           email: item.email || 'N/A',
-          type: item.type || 'General Partnership',
+          type: item.type || item.interest_type || 'General Partnership',
           vertical: item.vertical || 'Entire Umbrella Ecosystem',
           location: item.location || 'Not specified',
           message: item.message || 'No message provided',
-          timestamp: item.timestamp || new Date().toISOString(),
+          timestamp: item.timestamp || item.created_at || new Date().toISOString(),
           status: item.status || 'New',
           priority: item.priority || 'Medium',
           notes: item.notes || ''
@@ -2243,7 +2300,7 @@ function loadLeadsFromStorage() {
     console.warn('Storage read warning', err);
   }
 
-  // Load Seed
+  // 3. Fallback to Seed
   leadsList = JSON.parse(JSON.stringify(SEED_INQUIRIES));
   saveLeadsToStorage();
 }
@@ -2324,18 +2381,44 @@ function switchTab(tabId) {
 /* --------------------------------------------------------------------------
    5. RENDER OVERVIEW TAB
    -------------------------------------------------------------------------- */
-function renderOverview() {
+async function renderOverview() {
+  // Fetch live stats from API if possible
+  try {
+    const res = await fetch(`${API_BASE}/dashboard/stats.php`);
+    if (res.ok) {
+      const json = await res.json();
+      if (json.success && json.data) {
+        dashboardStatsData = json.data;
+      }
+    }
+  } catch (err) {
+    console.warn('Could not load live dashboard stats from API, using local fallback:', err);
+  }
+
   // Update KPI Counter
   const kpiEl = document.getElementById('kpiTotalLeads');
-  if (kpiEl) kpiEl.textContent = leadsList.length;
+  if (kpiEl) {
+    kpiEl.textContent = dashboardStatsData ? dashboardStatsData.kpis.total_leads : leadsList.length;
+  }
 
   const badgeEl = document.getElementById('sidebarLeadsBadge');
-  if (badgeEl) badgeEl.textContent = leadsList.length;
+  if (badgeEl) {
+    badgeEl.textContent = dashboardStatsData ? dashboardStatsData.kpis.total_leads : leadsList.length;
+  }
 
   // Render recent 4 leads in overview
   const recentContainer = document.getElementById('overviewRecentLeads');
   if (recentContainer) {
-    const recent = leadsList.slice(0, 4);
+    const recent = (dashboardStatsData && dashboardStatsData.recent_leads && dashboardStatsData.recent_leads.length)
+      ? dashboardStatsData.recent_leads.map(r => ({
+          id: r.lead_code || `LEAD-${r.id}`,
+          name: r.name,
+          type: r.interest_type || r.type,
+          vertical: r.vertical,
+          status: r.status
+        }))
+      : leadsList.slice(0, 4);
+
     if (!recent.length) {
       recentContainer.innerHTML = '<p style="color: var(--text-light); padding: 10px 0;">No inquiries received yet.</p>';
     } else {
@@ -2369,13 +2452,17 @@ function renderOverview() {
   // Render Verticals Mini Grid
   const vMiniContainer = document.getElementById('overviewVerticalsList');
   if (vMiniContainer) {
-    vMiniContainer.innerHTML = SEED_VERTICALS.map(v => `
+    const verticalsToRender = (dashboardStatsData && dashboardStatsData.verticals)
+      ? dashboardStatsData.verticals
+      : SEED_VERTICALS;
+
+    vMiniContainer.innerHTML = verticalsToRender.map(v => `
       <div class="mini-vertical-card">
         <div class="mini-v-left">
           <div class="mini-v-num" style="background: ${v.color};">${v.id}</div>
           <div style="display: flex; flex-direction: column;">
             <span class="mini-v-title">${escapeHtml(v.name)}</span>
-            <span class="mini-v-sub">${escapeHtml(v.category)}</span>
+            <span class="mini-v-sub">${escapeHtml(v.category)} ${v.inquiry_count !== undefined ? `(${v.inquiry_count} leads)` : ''}</span>
           </div>
         </div>
         <span class="status-pill status-active"><i class="fa-solid fa-circle" style="font-size: 0.45rem;"></i> Active</span>
@@ -2399,13 +2486,16 @@ function renderOverviewCharts() {
     gradient.addColorStop(0, 'rgba(2, 132, 199, 0.35)');
     gradient.addColorStop(1, 'rgba(2, 132, 199, 0.02)');
 
+    const trendLabels = dashboardStatsData ? dashboardStatsData.trend_chart.labels : ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct (Current)'];
+    const trendData = dashboardStatsData ? dashboardStatsData.trend_chart.data : [14, 22, 31, 45, 68, leadsList.length + 80];
+
     leadsTrendChartInstance = new Chart(ctxTrend, {
       type: 'line',
       data: {
-        labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct (Current)'],
+        labels: trendLabels,
         datasets: [{
           label: 'Partner Inquiries',
-          data: [14, 22, 31, 45, 68, leadsList.length + 80],
+          data: trendData,
           borderColor: '#0284c7',
           backgroundColor: gradient,
           borderWidth: 3,
@@ -2451,21 +2541,24 @@ function renderOverviewCharts() {
   if (ctxDonut) {
     if (verticalsChartInstance) verticalsChartInstance.destroy();
 
+    const donutLabels = dashboardStatsData ? dashboardStatsData.vertical_chart.labels : [
+      'Gramsanjog',
+      'LASA Services',
+      'LASolution IT',
+      'EzyBilling SaaS',
+      'Political Ops',
+      'FitnessGuru',
+      'SarpanchPrarthi',
+      'Food & Ecommerce'
+    ];
+    const donutData = dashboardStatsData ? dashboardStatsData.vertical_chart.data : [16, 12, 18, 20, 10, 14, 15, 12];
+
     verticalsChartInstance = new Chart(ctxDonut, {
       type: 'doughnut',
       data: {
-        labels: [
-          'Gramsanjog',
-          'LASA Services',
-          'LASolution IT',
-          'EzyBilling SaaS',
-          'Political Ops',
-          'FitnessGuru',
-          'SarpanchPrarthi',
-          'Food & Ecommerce'
-        ],
+        labels: donutLabels,
         datasets: [{
-          data: [16, 12, 18, 20, 10, 14, 15, 12],
+          data: donutData,
           backgroundColor: [
             '#1e40af',
             '#0284c7',
@@ -2711,7 +2804,7 @@ function closeLeadModal() {
   document.getElementById('leadModal').classList.remove('active');
 }
 
-function handleLeadFormSubmit(e) {
+async function handleLeadFormSubmit(e) {
   e.preventDefault();
 
   const editId = document.getElementById('editLeadId').value;
@@ -2728,35 +2821,89 @@ function handleLeadFormSubmit(e) {
     notes: document.getElementById('mNotes').value.trim()
   };
 
-  if (editId) {
-    const idx = leadsList.findIndex(l => l.id === editId);
-    if (idx !== -1) {
-      leadsList[idx] = { ...leadsList[idx], ...leadData };
-      showToast('Lead Updated', `Inquiry [${editId}] successfully updated.`, 'success');
+  try {
+    if (editId) {
+      // 1. Send update to Backend API
+      const res = await fetch(`${API_BASE}/inquiries/detail.php?id=${encodeURIComponent(editId)}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(leadData)
+      });
+      const json = await res.json();
+      if (res.ok && json.success) {
+        showToast('Lead Updated', `Inquiry [${editId}] successfully updated in database.`, 'success');
+      } else {
+        throw new Error(json.message || 'Update failed');
+      }
+    } else {
+      // 2. Send create to Backend API
+      const res = await fetch(`${API_BASE}/inquiries/index.php`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(leadData)
+      });
+      const json = await res.json();
+      if (res.ok && json.success) {
+        showToast('Lead Created', `Added new inquiry from ${leadData.name}.`, 'success');
+      } else {
+        throw new Error(json.message || 'Create failed');
+      }
     }
-  } else {
-    const newLead = {
-      id: `LEAD-${100 + leadsList.length + 1}`,
-      ...leadData,
-      timestamp: new Date().toISOString()
-    };
-    leadsList.unshift(newLead);
-    showToast('Lead Created', `Added new inquiry from ${newLead.name}.`, 'success');
+  } catch (err) {
+    console.warn('API operation failed, applying local update:', err);
+    if (editId) {
+      const idx = leadsList.findIndex(l => l.id === editId);
+      if (idx !== -1) {
+        leadsList[idx] = { ...leadsList[idx], ...leadData };
+        showToast('Lead Updated (Local)', `Inquiry [${editId}] updated locally.`, 'info');
+      }
+    } else {
+      const newLead = {
+        id: `LEAD-${100 + leadsList.length + 1}`,
+        ...leadData,
+        timestamp: new Date().toISOString()
+      };
+      leadsList.unshift(newLead);
+      showToast('Lead Created (Local)', `Added new inquiry from ${newLead.name}.`, 'info');
+    }
   }
 
   saveLeadsToStorage();
   closeLeadModal();
-  renderOverview();
+  await loadLeadsFromStorage();
+  await renderOverview();
   renderCRMTable();
 }
 
-function deleteLead(id) {
+async function deleteLead(id) {
   if (confirm(`Are you sure you want to permanently delete inquiry [${id}]?`)) {
+    try {
+      const res = await fetch(`${API_BASE}/inquiries/detail.php?id=${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+        headers: { 'Accept': 'application/json' }
+      });
+      const json = await res.json();
+      if (res.ok && json.success) {
+        showToast('Lead Deleted', `Inquiry [${id}] removed from database.`, 'warning');
+      } else {
+        throw new Error(json.message || 'Deletion failed');
+      }
+    } catch (err) {
+      console.warn('API delete failed, removing locally:', err);
+      showToast('Lead Deleted', `Inquiry [${id}] removed.`, 'warning');
+    }
+
     leadsList = leadsList.filter(l => l.id !== id);
     saveLeadsToStorage();
-    renderOverview();
+    await loadLeadsFromStorage();
+    await renderOverview();
     renderCRMTable();
-    showToast('Lead Deleted', `Inquiry [${id}] removed.`, 'warning');
   }
 }
 
@@ -2774,37 +2921,27 @@ function launchWhatsApp(id) {
 }
 
 function exportLeadsCSV() {
-  if (!leadsList.length) {
-    showToast('Export Alert', 'No lead data to export.', 'warning');
-    return;
-  }
+  const vFilter = document.getElementById('filterVertical')?.value || 'ALL';
+  const sFilter = document.getElementById('filterStatus')?.value || 'ALL';
+  const tFilter = document.getElementById('filterType')?.value || 'ALL';
+  const searchQ = (document.getElementById('crmSearchInput')?.value || '').trim();
 
-  const headers = ['ID', 'Name', 'Phone', 'Email', 'Nature_of_Interest', 'Vertical', 'Location', 'Date', 'Status', 'Priority', 'Message', 'Notes'];
-  const rows = leadsList.map(l => [
-    `"${l.id}"`,
-    `"${(l.name || '').replace(/"/g, '""')}"`,
-    `"${l.phone || ''}"`,
-    `"${l.email || ''}"`,
-    `"${(l.type || '').replace(/"/g, '""')}"`,
-    `"${(l.vertical || '').replace(/"/g, '""')}"`,
-    `"${(l.location || '').replace(/"/g, '""')}"`,
-    `"${new Date(l.timestamp).toLocaleString()}"`,
-    `"${l.status || 'New'}"`,
-    `"${l.priority || 'Medium'}"`,
-    `"${(l.message || '').replace(/"/g, '""')}"`,
-    `"${(l.notes || '').replace(/"/g, '""')}"`
-  ]);
+  // Try direct download from Backend API
+  const params = new URLSearchParams();
+  if (vFilter !== 'ALL') params.set('vertical', vFilter);
+  if (sFilter !== 'ALL') params.set('status', sFilter);
+  if (tFilter !== 'ALL') params.set('type', tFilter);
+  if (searchQ) params.set('search', searchQ);
 
-  const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
+  const exportUrl = `${API_BASE}/inquiries/export.php?${params.toString()}`;
+
   const link = document.createElement('a');
-  link.href = url;
-  link.download = `LA_Solution_Ecosystem_Leads_${new Date().toISOString().slice(0, 10)}.csv`;
+  link.href = exportUrl;
+  link.target = '_blank';
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-  showToast('Export Complete', 'Downloaded CSV formatted spreadsheet.', 'success');
+  showToast('Export Initiated', 'Downloading CSV spreadsheet from MySQL database.', 'success');
 }
 
 /* --------------------------------------------------------------------------
@@ -2820,9 +2957,9 @@ function escapeHtml(str) {
     .replace(/'/g, '&#039;');
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  loadLeadsFromStorage();
-  renderOverview();
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadLeadsFromStorage();
+  await renderOverview();
   renderCRMTable();
 
   // Sidebar navigation click handlers
@@ -2867,10 +3004,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Real-time synchronization: listen for localStorage changes from other tabs
-  window.addEventListener('storage', (e) => {
+  window.addEventListener('storage', async (e) => {
     if (e.key === STORAGE_KEY) {
-      loadLeadsFromStorage();
-      renderOverview();
+      await loadLeadsFromStorage();
+      await renderOverview();
       renderCRMTable();
       showToast('Live Update', 'New inquiry received from landing page.', 'info');
     }
