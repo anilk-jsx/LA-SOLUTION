@@ -2210,7 +2210,7 @@ const SEED_INQUIRIES = [
    2. CRM STATE & BACKEND API SYNCHRONIZATION
    -------------------------------------------------------------------------- */
 const STORAGE_KEY = 'la_inquiries';
-let API_BASE = '../BACKEND/api';
+let API_BASE = 'https://api.lasolution.in/api';
 let leadsList = [];
 let currentPage = 1;
 const pageSize = 8;
@@ -2220,23 +2220,23 @@ let dashboardStatsData = null;
 
 // Dynamically discover the active API base URL (project root vs backend folder)
 async function resolveApiBase() {
-  const candidates = [
-    '../BACKEND/api',
-    'http://localhost:8000/api',
-    'http://localhost:8000/BACKEND/api',
-    '/api',
-    '/BACKEND/api'
-  ];
-  for (const base of candidates) {
-    try {
-      const test = await fetch(`${base}/health.php`);
-      if (test.ok) {
-        API_BASE = base;
-        return base;
+  try {
+    const response = await fetch(`${API_BASE}/health.php`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json'
       }
-    } catch (e) {}
+    });
+
+    if (!response.ok) {
+      throw new Error(`API returned status ${response.status}`);
+    }
+
+    return API_BASE;
+  } catch (error) {
+    console.error('API is unavailable:', error);
+    return API_BASE;
   }
-  return API_BASE;
 }
 
 async function loadLeadsFromStorage() {
